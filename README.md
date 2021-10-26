@@ -21,6 +21,7 @@ questions based on the contents within the text body.
 - *Features:* Use of machine learning to condense text and answer questions pertaining to
 the document/article. Planned language to use: Python.
 
-- Suggestions from Professor:
+- Suggestions from Professor: format IEEE; dataset merging - news; transformer; layer freezing and own layers added; train own model - small; two training sets (multi afterwords)
 
 ## References
+kagle
