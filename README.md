@@ -1,7 +1,7 @@
 # CSCE 4290 Group 1
 Ali Khan (leader), Rachel Johnson, Kaitlynn Whitney
 
-**Goals and Objectives:**
+## Goals and Objectives:
 The goal of our project is to create an Intelligent bot that, when given a url or document that
 contains a body of text, will print a summary of the article. The bot will then wait for the user to
 input any questions they may have about the article and then print out the answer, based on
