@@ -1,27 +1,29 @@
-# CSCE 4290 Group 1
-Ali Khan (leader), Rachel Johnson, Kaitlynn Whitney
+# Article Explorer
+A system to learn and explore articles featuring automatic text summarization and a query dialog engine
 
-## Goals and Objectives:
-The goal of our project is to create an Intelligent bot that, when given a url or document that
-contains a body of text, will print a summary of the article. The bot will then wait for the user to
-input any questions they may have about the article and then print out the answer, based on
-contents within the article.
+This was created as the NLP Project for UNT Fall 2021 CSCE 4290/5290
+by **Ali Khan, Kaitlynn Whitney, and Rachel Johnson**
 
-- *Motivation:* Ease of accessibility of information from large legal documents, lengthy news
-articles, and other large documents/text bodies.
+## Installation
+This application requires at least Python 3.7
 
-- *Significance:* This will allow someone to quickly navigate through large bodies of text
-while being able also obtain the information they need.
+Install dependencies with:
+```
+$ pip install -r requirements.txt
+```
 
-- *Objectives:* Our code will be able to summarize both an article pulled from a url and text
-pulled from an uploaded document. The user will then be able to then ask the Intelligent
-bot questions about the content of the article/document. The bot will answer these
-questions based on the contents within the text body.
+## How to Run
+Run either webapp.sh or ```python -m streamlit main.py```
 
-- *Features:* Use of machine learning to condense text and answer questions pertaining to
-the document/article. Planned language to use: Python.
+It should start the streamlit server and will be running on your browser
 
-- Suggestions from Professor: format IEEE; dataset merging - news; transformer; layer freezing and own layers added; train own model - small; two training sets (multi afterwords)
+Just enter the url of the article and the summary will pop up after processing after which you can query the text with the dialog engine.
 
-## References
-kagle
+Ex: https://en.wikipedia.org/wiki/Albert_Einstein 
+
+'When did Einstein die?'
+
+## Architecture
+
+In-Progress
+
