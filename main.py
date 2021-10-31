@@ -2,6 +2,7 @@ import re
 import ssl
 import streamlit as st
 from boilerpy3 import extractors
+from transformers import pipeline
 
 # Run with python -m streamlit main.py
 
@@ -35,11 +36,10 @@ def get_article(url):
 def summarize(text):
     # Extracts a summary from the text
     # currently grabs the first five sentences
-    sents = text.split('.')
-    if len(sents) >= 5:
-        return sents[:5]
-    else:
-        return sents
+    summarizer = pipeline('summarization')
+    summary = summarizer(text, max_length=5000, min_length=30, do_sample=False)
+
+    summary[0]['summary_text']
 
 
 def answer(question, text):
