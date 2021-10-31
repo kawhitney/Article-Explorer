@@ -1,4 +1,5 @@
 import re
+import ssl
 import streamlit as st
 from boilerpy3 import extractors
 
@@ -22,8 +23,9 @@ def run():
 
 
 def get_article(url):
+    ssl._create_default_https_context = ssl._create_unverified_context
     # Fetches the text of an article from the given url
-    text = extractors.ArticleExtractor().get_content_from_url(url)
+    text = extractors.ArticleExtractor(False).get_content_from_url(url)
     if 'wikipedia.org' in url:
         # Get rid of those pesky '[1]' footnotes from wikipedia articles
         text = re.sub(r"\[.*?\]+", '', text)
