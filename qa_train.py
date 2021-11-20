@@ -1,8 +1,10 @@
 # https://github.com/huggingface/notebooks/blob/master/examples/question_answering.ipynb
 import torch
 import transformers
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForQuestionAnswering
+from transformers import TrainingArguments, Trainer, default_data_collator
 from datasets import load_dataset, load_metric
+import os  # to keep the warning from showing up
 
 # dataset
 model_checkpoint = "distilbert-base-uncased"
@@ -176,4 +178,42 @@ def prepare_train_features(examples):
 tokenized_datasets = datasets.map(prepare_train_features, batched=True, remove_columns=datasets["train"].column_names)
 
 # ====== Fine-tuning the model ======
+# to combat the warning from model
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+model = AutoModelForQuestionAnswering.from_pretrained(model_checkpoint)
+# a warning here is expected: removal of the head used to pretrain on a masked language modeling
+# objective and replacing it with a new head which don't have pretrained weights
+
+# fine-tune this model before using it for inference by instantiating a trainer
+model_name = model_checkpoint.split("/")[-1]
+# class that contains all attributes to customize the training
+args = TrainingArguments(
+    f"{model_name}-finetuned-squad",
+    evaluation_strategy="epoch",
+    learning_rate=2e-5,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    num_train_epochs=3,
+    weight_decay=0.01,
+    push_to_hub=True,
+)
+
+# need data collator that will batch processed examples together
+data_collator = default_data_collator
+
+# evaluate model and compute metrics
+trainer = Trainer(
+    model,
+    args,
+    train_dataset=tokenized_datasets["train"],
+    eval_dataset=tokenized_datasets["validation"],
+    data_collator=data_collator,
+    tokenizer=tokenizer,
+)
+print("STOPS")
+
+# fine tune model by calling the train method - expected to take a while
+trainer.train()
+# save training since it takes a while in case of restart
+trainer.save_model("test-squad-trained")

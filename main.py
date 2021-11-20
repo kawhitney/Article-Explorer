@@ -1,10 +1,13 @@
 import re
 import ssl
 import streamlit as st
+import torch
 from boilerpy3 import extractors
 from transformers import pipeline
 
-# Run with python -m streamlit main.py
+from question_answering import question_answering
+
+# Run with: python -m streamlit run main.py
 
 
 def run():
@@ -36,16 +39,42 @@ def get_article(url):
 def summarize(text):
     # Extracts a summary from the text
     # currently grabs the first five sentences
-    summarizer = pipeline('summarization')
-    summary = summarizer(text, max_length=5000, min_length=30, do_sample=False)
+    sents = text.split('.')
+    if len(sents) >= 5:
+        return sents[:5]
+    else:
+        return sents
 
-    summary[0]['summary_text']
-
+# ================= Question Answering ========================
+# https://towardsdatascience.com/question-and-answering-with-bert-6ef89a78dac
 
 def answer(question, text):
-    # Answers a question about the text
-    # currenty ignores the question and returns the last sentence
-    return text.split('.')[-1]
+    # get max number of tokens acceptable
+    question_length = len(question)
+    bert_text_length = 510 - question_length
+    # get maximum length of text
+    max_text_length = len(text)
+
+    # class object
+    qa = question_answering()
+
+    # dictionary to hold answer and the prediction value
+    result = {}
+
+    for i in range(0, max_text_length, bert_text_length):
+        # run BERT tokenization, store the start and end scores
+        if i+bert_text_length < max_text_length:        # if length is more than text length
+            prediciton = qa.predict_answer(question, text[i:i+bert_text_length])
+        else:    # if length is less than text length
+            prediciton = qa.predict_answer(question, text[i:max_text_length])
+        # add result if higher prediciton value
+        if not result or prediciton[1] > result["probability"]:
+            result["answer"] = prediciton[0]
+            result["probability"] = prediciton[1]
+
+    return(result["answer"])
+
+
 
 
 if __name__ == "__main__":
