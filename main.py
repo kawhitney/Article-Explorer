@@ -1,10 +1,13 @@
 import re
 import ssl
+import torch
 import streamlit as st
 from boilerpy3 import extractors
-from transformers import pipeline
+from summarizer import Summarizer
+
 
 # Run with python -m streamlit main.py
+# Could also be run with streamlit run main.py
 
 
 def run():
@@ -30,21 +33,22 @@ def get_article(url):
     if 'wikipedia.org' in url:
         # Get rid of those pesky '[1]' footnotes from wikipedia articles
         text = re.sub(r"\[.*?\]+", '', text)
+
+        # text = text.find('\n\n',text)
+
     return text
 
 
 def summarize(text):
     # Extracts a summary from the text
-    # currently grabs the first five sentences
-    summarizer = pipeline('summarization')
-    summary = summarizer(text, max_length=5000, min_length=30, do_sample=False)
-
-    summary[0]['summary_text']
+    model = Summarizer()
+    result = model(text, num_sentences=5)
+    return result
 
 
 def answer(question, text):
     # Answers a question about the text
-    # currenty ignores the question and returns the last sentence
+    # currently ignores the question and returns the last sentence
     return text.split('.')[-1]
 
 
