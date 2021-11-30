@@ -1,4 +1,5 @@
 import re
+from io import StringIO
 import streamlit as st
 from boilerpy3 import extractors
 
@@ -10,20 +11,34 @@ def run():
     st.sidebar.title("Article Explorer")
     st.sidebar.subheader("Learn more about a text by asking it questions and reading its summary")
     article = None
-    url = st.sidebar.text_input(label="url")
+    url = st.sidebar.text_input(label="Enter the Url to an article")
+    uploaded_file = st.sidebar.file_uploader(label="Or upload a text file", type='txt')
+
+    if uploaded_file is not None:
+        article = StringIO(uploaded_file.getvalue().decode("utf-8")).read()
     if url:
         article = get_article(url)
+
+    if article:
+        article = clean_text(article)
         summary = summarize(article)
         st.write(summary)
+        question = st.sidebar.text_input(label="Ask a question")
+        btn = st.sidebar.button('Ask')
+        if question or (btn and question):
+            print(article.split('.'))
+            st.write(answer(question, article))
 
-    question = st.sidebar.text_input(label="Ask a question")
-    if article and (question or (st.sidebar.button('Ask') and question)):
-        st.write(answer(question, article))
+
+def clean_text(text):
+    # remove extra whitespace
+    return ".".join([sent.strip() for sent in text.split('.')])
 
 
 def get_article(url):
     # Fetches the text of an article from the given url
     text = extractors.ArticleExtractor().get_content_from_url(url)
+    print(text)
     if 'wikipedia.org' in url:
         # Get rid of those pesky '[1]' footnotes from wikipedia articles
         text = re.sub(r"\[.*?\]+", '', text)
