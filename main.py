@@ -4,11 +4,12 @@ import streamlit as st
 import torch
 from boilerpy3 import extractors
 from transformers import pipeline
+from summarizer import Summarizer
 
 from question_answering import question_answering
 
 # Run with: python -m streamlit run main.py
-
+# Could also be run with streamlit run main.py
 
 def run():
     # main process that creates sets up the streamlit app
@@ -33,6 +34,9 @@ def get_article(url):
     if 'wikipedia.org' in url:
         # Get rid of those pesky '[1]' footnotes from wikipedia articles
         text = re.sub(r"\[.*?\]+", '', text)
+
+        # text = text.find('\n\n',text)
+
     return text
 
 
@@ -46,6 +50,7 @@ def summarize(text):
 # https://towardsdatascience.com/question-and-answering-with-bert-6ef89a78dac
 
 def answer(question, text):
+
     # get max number of tokens acceptable
     question_length = len(question)
     bert_text_length = 510 - question_length
@@ -70,8 +75,6 @@ def answer(question, text):
             result["probability"] = prediciton[1]
 
     return(result["answer"])
-
-
 
 
 if __name__ == "__main__":
