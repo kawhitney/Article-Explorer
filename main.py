@@ -38,12 +38,9 @@ def get_article(url):
 
 def summarize(text):
     # Extracts a summary from the text
-    # currently grabs the first five sentences
-    sents = text.split('.')
-    if len(sents) >= 5:
-        return sents[:5]
-    else:
-        return sents
+    model = Summarizer()
+    result = model(text, num_sentences=5)
+    return result
 
 # ================= Question Answering ========================
 # https://towardsdatascience.com/question-and-answering-with-bert-6ef89a78dac
