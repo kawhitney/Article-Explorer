@@ -1,4 +1,5 @@
 import re
+from io import StringIO
 import ssl
 import streamlit as st
 import torch
@@ -16,15 +17,30 @@ def run():
     st.sidebar.title("Article Explorer")
     st.sidebar.subheader("Learn more about a text by asking it questions and reading its summary")
     article = None
-    url = st.sidebar.text_input(label="url")
+    summary = None
+    url = st.sidebar.text_input(label="Enter the Url to an article")
+    uploaded_file = st.sidebar.file_uploader(label="Or upload a text file", type='txt')
+
+    if uploaded_file is not None:
+        article = StringIO(uploaded_file.getvalue().decode("utf-8")).read()
     if url:
         article = get_article(url)
-        summary = summarize(article)
-        st.write(summary)
 
-    question = st.sidebar.text_input(label="Ask a question")
-    if article and (question or (st.sidebar.button('Ask') and question)):
-        st.write(answer(question, article))
+    if article:
+        article = clean_text(article)
+        if not summary:
+            summary = summarize(article)
+            st.write(summary)
+        question = st.sidebar.text_input(label="Ask a question")
+        btn = st.sidebar.button('Ask')
+        if question or (btn and question):
+            print(article.split('.'))
+            st.write("Answer: " + answer(question, article))
+
+
+def clean_text(text):
+    # remove extra whitespace
+    return ".".join([sent.strip() for sent in text.split('.')])
 
 
 def get_article(url):
@@ -34,9 +50,6 @@ def get_article(url):
     if 'wikipedia.org' in url:
         # Get rid of those pesky '[1]' footnotes from wikipedia articles
         text = re.sub(r"\[.*?\]+", '', text)
-
-        # text = text.find('\n\n',text)
-
     return text
 
 
