@@ -26,4 +26,3 @@ Ex: https://en.wikipedia.org/wiki/Albert_Einstein
 ## Architecture
 
 In-Progress
-
