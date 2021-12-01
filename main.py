@@ -11,6 +11,7 @@ def run():
     st.sidebar.title("Article Explorer")
     st.sidebar.subheader("Learn more about a text by asking it questions and reading its summary")
     article = None
+    summary = None
     url = st.sidebar.text_input(label="Enter the Url to an article")
     uploaded_file = st.sidebar.file_uploader(label="Or upload a text file", type='txt')
 
@@ -21,13 +22,14 @@ def run():
 
     if article:
         article = clean_text(article)
-        summary = summarize(article)
-        st.write(summary)
+        if not summary:
+            summary = summarize(article)
+            st.write(summary)
         question = st.sidebar.text_input(label="Ask a question")
         btn = st.sidebar.button('Ask')
         if question or (btn and question):
             print(article.split('.'))
-            st.write(answer(question, article))
+            st.write("Answer: " + answer(question, article))
 
 
 def clean_text(text):
