@@ -61,11 +61,11 @@ def answer(question, text):
     # dictionary to hold answer and the prediction value
     result = {}
 
-    for i in range(0, max_text_length, bert_text_length):
+    for i in range(0, max_text_length, bert_text_length/2):
         # run BERT tokenization, store the start and end scores
         if i+bert_text_length < max_text_length:        # if length is more than text length
             prediciton = qa.predict_answer(question, text[i:i+bert_text_length])
-        else:    # if length is less than text length
+        else:    # if length is less than max text length
             prediciton = qa.predict_answer(question, text[i:max_text_length])
         # add result if higher prediciton value
         if not result or prediciton[1] > result["probability"]:

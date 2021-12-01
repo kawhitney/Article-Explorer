@@ -48,4 +48,3 @@ class question_answering:
         # turn start_scores to list - to access prediction value
         start_scores = torch.flatten(start_scores).tolist()
         return([answer, start_scores[answer_start]])
-        #return([tokens, start_scores, end_scores])
