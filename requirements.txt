@@ -1,2 +1,4 @@
-boilerpy3~=1.0.5
-streamlit~=1.2.0
+boilerpy3
+streamlit
+transformers
+
