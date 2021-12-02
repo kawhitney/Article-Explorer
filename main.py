@@ -83,7 +83,7 @@ def answer(question, text):
         else:    # if length is less than max text length
             prediciton = qa.predict_answer(question, text[i:max_text_length])
         # add result if higher prediciton value
-        if not result or prediciton[1] > result["probability"]:
+        if not result or prediciton[1] >= result["probability"]:
             result["answer"] = prediciton[0]
             result["probability"] = prediciton[1]
 
