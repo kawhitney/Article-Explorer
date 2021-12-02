@@ -86,7 +86,9 @@ def answer(question, text):
         if not result or prediciton[1] >= result["probability"]:
             result["answer"] = prediciton[0]
             result["probability"] = prediciton[1]
-
+    if result["probability"] < 1:
+        result["answer"] = "No answer was found for this question."
+    
     return(result["answer"])
 
 
