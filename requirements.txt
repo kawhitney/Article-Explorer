@@ -1,4 +1,5 @@
 boilerpy3
 streamlit
+torch
 transformers
 bert-extractive-summarizer
